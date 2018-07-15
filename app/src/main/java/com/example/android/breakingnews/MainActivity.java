@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<List<News>> onCreateLoader(int id, Bundle args) {
-        return new Loader<>(this);
+        return new NewsLoader(this);
     }
 
     @Override
