@@ -1,5 +1,5 @@
 package com.example.android.breakingnews;
-
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.content.Context;
@@ -54,26 +54,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-    @Override
-    public Loader<List<News>> onCreateLoader(int id, Bundle args) {
-        return new NewsLoader(this);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<News>> loader, List<News> news) {
-        View loadingIndicator = findViewById(R.id.progress_bar);
-        loadingIndicator.setVisibility(View.GONE);
-        mTextView.setText(R.string.no_news);
-        mAdapter.clear();
-
-        if (news != null && !news.isEmpty()) {
-            mAdapter.addAll(news);
+        @Override
+        public Loader<List<News>> onCreateLoader ( int id, Bundle args){
+            return new NewsLoader(MainActivity.this);
         }
-    }
 
-    @Override
-    public void onLoaderReset(Loader<List<News>> loader) {
-        mAdapter.clear();
-    }
+        @Override
+        public void onLoadFinished (Loader<List<News>> loader, List<News> news){
+            View loadingIndicator = findViewById(R.id.progress_bar);
+            loadingIndicator.setVisibility(View.GONE);
+            mTextView.setText(R.string.no_news);
+            mAdapter.clear();
 
-}
+            if (news != null && !news.isEmpty()) {
+                mAdapter.addAll(news);
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<News>> loader) {
+            mAdapter.clear();
+        }
+
+    }

@@ -1,5 +1,7 @@
 package com.example.android.breakingnews;
 
+import android.support.v4.content.Loader;
+
 public class News {
     private String mTitle;
     private String mCategory;
