@@ -115,11 +115,11 @@ public class QueryUtils {
                 String category = currentResults.getString("sectionName");
                 String date = currentResults.getString("webPublicationDate");
                 String url = currentResults.getString("webUrl");
-                JSONArray tagsauthor = currentResults.getJSONArray("references");
+                JSONArray tagsauthor = currentResults.getJSONArray("tags");
                 String author="";
                 if (tagsauthor.length()!= 0) {
                     JSONObject currenttagsauthor = tagsauthor.getJSONObject(0);
-                    author = currenttagsauthor.getString("author");
+                    author = currenttagsauthor.getString("webTitle");
                 }else{
                     author = "No Author ..";
                 }
