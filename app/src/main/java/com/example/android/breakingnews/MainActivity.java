@@ -1,5 +1,4 @@
 package com.example.android.breakingnews;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.content.Context;
