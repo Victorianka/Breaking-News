@@ -1,4 +1,7 @@
 package com.example.android.breakingnews;
+
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.content.Context;
@@ -8,6 +11,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,6 +24,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
     private NewsAdapter mAdapter;
     private TextView mTextView;
+    private static String REQUEST_URL = "http://content.guardianapis.com/search?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,26 +59,62 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-        @Override
-        public Loader<List<News>> onCreateLoader ( int id, Bundle args){
-            return new NewsLoader(MainActivity.this);
+    @Override
+    public Loader<List<News>> onCreateLoader(int id, Bundle args) {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String minNews = sharedPreferences.getString(getString(R.string.settings_min_news_key), getString(R.string.settings_min_news_default));
+        String orderBy = sharedPreferences.getString(getString(R.string.settings_order_by_key), getString(R.string.settings_order_by_default));
+        String section = sharedPreferences.getString(getString(R.string.settings_section_news_key), getString(R.string.settings_section_news_default));
+
+        Uri baseUri = Uri.parse(REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        uriBuilder.appendQueryParameter("api-key", "test");
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter("page-size", minNews);
+        uriBuilder.appendQueryParameter("order-by", orderBy);
+
+        if (!section.equals(getString(R.string.settings_section_news_default))) {
+            uriBuilder.appendQueryParameter("section", section);
         }
 
-        @Override
-        public void onLoadFinished (Loader<List<News>> loader, List<News> news){
-            View loadingIndicator = findViewById(R.id.progress_bar);
-            loadingIndicator.setVisibility(View.GONE);
-            mTextView.setText(R.string.no_news);
-            mAdapter.clear();
-
-            if (news != null && !news.isEmpty()) {
-                mAdapter.addAll(news);
-            }
-        }
-
-        @Override
-        public void onLoaderReset(Loader<List<News>> loader) {
-            mAdapter.clear();
-        }
-
+        return new NewsLoader(MainActivity.this, uriBuilder.toString());
     }
+
+    @Override
+    public void onLoadFinished(Loader<List<News>> loader, List<News> news) {
+        View loadingIndicator = findViewById(R.id.progress_bar);
+        loadingIndicator.setVisibility(View.GONE);
+        mTextView.setText(R.string.no_news);
+        mAdapter.clear();
+
+        if (news != null && !news.isEmpty()) {
+            mAdapter.addAll(news);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<News>> loader) {
+        mAdapter.clear();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_setting) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+}

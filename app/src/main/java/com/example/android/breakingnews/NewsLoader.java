@@ -5,11 +5,14 @@ import java.util.List;
 
 public class NewsLoader  extends AsyncTaskLoader<List<News>>{
 
-    private static String REQUEST_URL =
-            "https://content.guardianapis.com/search?api-key=649eec2e-a8af-45fe-9403-f1c966709078&show-tags=contributor";
+  //  private static String REQUEST_URL =
+  //         "https://content.guardianapis.com/search?api-key=649eec2e-a8af-45fe-9403-f1c966709078&show-tags=contributor";
 
-    public NewsLoader(Context context) {
+    String mURL;
+
+    public NewsLoader(Context context, String url) {
         super(context);
+        this.mURL = url;
     }
 
     @Override
@@ -18,11 +21,11 @@ public class NewsLoader  extends AsyncTaskLoader<List<News>>{
     }
 
     public List<News> loadInBackground() {
-        if (REQUEST_URL == null) {
+        if (mURL == null) {
             return null;
         }
 
-        List<News> newsList = QueryUtils.fetchNewsData(REQUEST_URL);
+        List<News> newsList = QueryUtils.fetchNewsData(mURL);
         return newsList;
     }
 }
