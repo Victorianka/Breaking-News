@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         String minNews = sharedPreferences.getString(getString(R.string.settings_min_news_key), getString(R.string.settings_min_news_default));
         String orderBy = sharedPreferences.getString(getString(R.string.settings_order_by_key), getString(R.string.settings_order_by_default));
-        String section = sharedPreferences.getString(getString(R.string.settings_section_news_key), getString(R.string.settings_section_news_default));
+        String section = sharedPreferences.getString(getString(R.string.settings_section_key), getString(R.string.settings_section_default));
 
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         uriBuilder.appendQueryParameter("page-size", minNews);
         uriBuilder.appendQueryParameter("order-by", orderBy);
 
-        if (!section.equals(getString(R.string.settings_section_news_default))) {
+        if (!section.equals(getString(R.string.settings_section_default))) {
             uriBuilder.appendQueryParameter("section", section);
         }
 
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.setting) {
+        if (id == R.id.settings) {
             Intent settingsIntent = new Intent(this, Settings.class);
             startActivity(settingsIntent);
             return true;
