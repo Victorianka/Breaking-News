@@ -102,15 +102,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_setting) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        if (id == R.id.setting) {
+            Intent settingsIntent = new Intent(this, Settings.class);
             startActivity(settingsIntent);
             return true;
         }
