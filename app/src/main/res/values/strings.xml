@@ -39,44 +39,44 @@
     <string name="settings_title">News Settings</string>
 
     <string name="settings_min_news_label">Minimum News</string>
-    <string name="settings_min_news_key" translatable="false">min_news</string>
-    <string name="settings_min_news_default" translatable="false">0</string>
+    <string name="settings_min_news_key">min_news</string>
+    <string name="settings_min_news_default">0</string>
 
     <string name="settings_order_by_label">Order By</string>
-    <string name="settings_order_by_key" translatable="false">order_by</string>
-    <string name="settings_order_by_default" translatable="false">@string/settings_order_by_newest_value</string>
+    <string name="settings_order_by_key">order_by</string>
+    <string name="settings_order_by_default">@string/settings_order_by_newest_value</string>
 
     <string name="settings_order_by_newest_label">Newest</string>
-    <string name="settings_order_by_newest_value" translatable="false">newest</string>
+    <string name="settings_order_by_newest_value">newest</string>
 
     <string name="settings_order_by_oldest_label">Oldest</string>
-    <string name="settings_order_by_oldest_value" translatable="false">oldest</string>
+    <string name="settings_order_by_oldest_value">oldest</string>
 
     <string name="settings_order_by_relevance_label">Relevance</string>
-    <string name="settings_order_by_relevance_value" translatable="false">relevance</string>
+    <string name="settings_order_by_relevance_value">relevance</string>
 
     <string name="settings_section_label">Section</string>
-    <string name="settings_section_key" translatable="false">section</string>
-    <string name="settings_section_default" translatable="false">@string/settings_section_all_value</string>
+    <string name="settings_section_key">section</string>
+    <string name="settings_section_default">@string/settings_section_all_value</string>
 
     <string name="settings_section_all_label">All</string>
-    <string name="settings_section_all_value" translatable="false"></string>
+    <string name="settings_section_all_value"></string>
 
     <string name="settings_section_europe_label">Europe news</string>
-    <string name="settings_section_europe_value" translatable="false">europe-news</string>
+    <string name="settings_section_europe_value">europe-news</string>
 
     <string name="settings_section_world_label">World news</string>
-    <string name="settings_section_world_value" translatable="false">world</string>
+    <string name="settings_section_world_value">world</string>
 
     <string name="settings_section_media_network_label">Media Network</string>
-    <string name="settings_section_media_network_value" translatable="false">media-network</string>
+    <string name="settings_section_media_network_value">media-network</string>
 
     <string name="settings_section_society_label">Society</string>
-    <string name="settings_section_society_value" translatable="false">society</string>
+    <string name="settings_section_society_value">society</string>
 
     <string name="settings_section_business_label">Business</string>
-    <string name="settings_section_business_value" translatable="false">business</string>
+    <string name="settings_section_business_value">business</string>
 
     <string name="settings_section_film_label">Film</string>
-    <string name="settings_section_film_value" translatable="false">film</string>
+    <string name="settings_section_film_value">film</string>
 </resources>
