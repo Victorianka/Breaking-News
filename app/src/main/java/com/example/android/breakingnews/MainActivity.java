@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        uriBuilder.appendQueryParameter("api-key", "test");
+        uriBuilder.appendQueryParameter("api-key", "649eec2e-a8af-45fe-9403-f1c966709078    ");
         uriBuilder.appendQueryParameter("show-tags", "contributor");
         uriBuilder.appendQueryParameter("page-size", minNews);
         uriBuilder.appendQueryParameter("order-by", orderBy);
@@ -81,6 +81,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         return new NewsLoader(MainActivity.this, uriBuilder.toString());
+    }
+
+    @Override
+    public void onRefresh() {
+        getSupportLoaderManager().restartLoader(Loader<List<News>>, null, this);
     }
 
     @Override
