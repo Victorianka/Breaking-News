@@ -21,10 +21,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>>{
     private NewsAdapter mAdapter;
     private TextView mTextView;
     private static String REQUEST_URL = "http://content.guardianapis.com/search?";
+    private static final int FEED_NEWS_LOADER_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mTextView = findViewById(R.id.text_view);
         newsListView.setEmptyView(mTextView);
         mAdapter = new NewsAdapter(this, new ArrayList<News>());
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener((SharedPreferences.OnSharedPreferenceChangeListener) this);
 
         newsListView.setAdapter(mAdapter);
         newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -71,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        uriBuilder.appendQueryParameter("api-key", "649eec2e-a8af-45fe-9403-f1c966709078    ");
+        uriBuilder.appendQueryParameter("api-key", "649eec2e-a8af-45fe-9403-f1c966709078");
         uriBuilder.appendQueryParameter("show-tags", "contributor");
         uriBuilder.appendQueryParameter("page-size", minNews);
         uriBuilder.appendQueryParameter("order-by", orderBy);
@@ -83,10 +87,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return new NewsLoader(MainActivity.this, uriBuilder.toString());
     }
 
-    @Override
-    public void onRefresh() {
-        getSupportLoaderManager().restartLoader(Loader<List<News>>, null, this);
+public void onSharedPreferenceChange(SharedPreferences preferences, String key) {
+    if (key.equals(getString(R.string.settings_order_by_key)) ||
+            key.equals(getString(R.string.settings_section_key))){
+        mAdapter.clear();
+        mTextView.setVisibility(View.GONE);
+        View loadingIndicator = findViewById(R.id.progress_bar);
+        loadingIndicator.setVisibility(View.VISIBLE);
+        getLoaderManager().restartLoader(FEED_NEWS_LOADER_ID, null, (android.app.LoaderManager.LoaderCallbacks<Object>) this);
     }
+}
 
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> news) {
