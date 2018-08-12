@@ -17,15 +17,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.view.View.OnClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>>{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>>, SharedPreferences.OnSharedPreferenceChangeListener {
     private NewsAdapter mAdapter;
     private TextView mTextView;
     private static String REQUEST_URL = "http://content.guardianapis.com/search?";
-    private static final int FEED_NEWS_LOADER_ID = 1;
+    private static final int NEWS_LOADER_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +38,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         newsListView.setEmptyView(mTextView);
         mAdapter = new NewsAdapter(this, new ArrayList<News>());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener((SharedPreferences.OnSharedPreferenceChangeListener) this);
-
         newsListView.setAdapter(mAdapter);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
         newsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -51,11 +53,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
         if (networkInfo != null && networkInfo.isConnected()) {
             LoaderManager loaderManager = getSupportLoaderManager();
-            loaderManager.initLoader(0, null, this);
+            loaderManager.initLoader(NEWS_LOADER_ID, null, this);
         } else {
             View progressBar = findViewById(R.id.progress_bar);
             progressBar.setVisibility(View.GONE);
@@ -87,17 +89,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return new NewsLoader(MainActivity.this, uriBuilder.toString());
     }
 
-public void onSharedPreferenceChange(SharedPreferences preferences, String key) {
-    if (key.equals(getString(R.string.settings_order_by_key)) ||
-            key.equals(getString(R.string.settings_section_key))){
-        mAdapter.clear();
-        mTextView.setVisibility(View.GONE);
-        View loadingIndicator = findViewById(R.id.progress_bar);
-        loadingIndicator.setVisibility(View.VISIBLE);
-        getLoaderManager().restartLoader(FEED_NEWS_LOADER_ID, null, (android.app.LoaderManager.LoaderCallbacks<Object>) this);
-    }
-}
-
     @Override
     public void onLoadFinished(Loader<List<News>> loader, List<News> news) {
         View loadingIndicator = findViewById(R.id.progress_bar);
@@ -107,6 +98,17 @@ public void onSharedPreferenceChange(SharedPreferences preferences, String key) 
 
         if (news != null && !news.isEmpty()) {
             mAdapter.addAll(news);
+        }
+    }
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.settings_order_by_key)) ||
+                key.equals(getString(R.string.settings_section_key))){
+            mAdapter.clear();
+            mTextView.setVisibility(View.GONE);
+            View loadingIndicator = findViewById(R.id.progress_bar);
+            loadingIndicator.setVisibility(View.VISIBLE);
+            getSupportLoaderManager().restartLoader(NEWS_LOADER_ID, null, this);
         }
     }
 
